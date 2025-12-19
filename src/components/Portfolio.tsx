@@ -30,7 +30,7 @@ export function Portfolio() {
 
   // Function to get video platform icon
   const getPlatformIcon = (type: string) => {
-    switch(type.toLowerCase()) {
+    switch (type.toLowerCase()) {
       case 'youtube':
         return <Youtube className="w-4 h-4" />;
       case 'drive':
@@ -49,7 +49,7 @@ export function Portfolio() {
     let type = video.type || 'YouTube';
 
     // Process based on video type
-    switch(type.toLowerCase()) {
+    switch (type.toLowerCase()) {
       case 'youtube':
         const ytId = extractYouTubeId(videoId);
         videoId = ytId;
@@ -100,7 +100,7 @@ export function Portfolio() {
       title: video.title || 'Sans titre',
       description: video.description || '',
       videoId: videoId,
-      category: video.category || 'Montage Vidéo',
+      category: video.category || 'Short Form',
       client: video.client || '',
       duration: video.duration || '',
       type: type,
@@ -115,62 +115,62 @@ export function Portfolio() {
   // Extract YouTube ID
   const extractYouTubeId = (url: string): string => {
     if (!url) return '';
-    
+
     // If it's already just an ID
     if (url.length === 11 && !url.includes('/')) {
       return url;
     }
-    
+
     const patterns = [
       /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
       /^([a-zA-Z0-9_-]{11})$/
     ];
-    
+
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match) return match[1];
     }
-    
+
     return '';
   };
 
   // Extract Google Drive ID
   const extractGoogleDriveId = (url: string): string => {
     if (!url) return '';
-    
+
     // Direct file ID
     if (url.length >= 20 && !url.includes('/')) {
       return url;
     }
-    
+
     // Extract from Google Drive URL
     const patterns = [
       /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/,
       /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
       /^([a-zA-Z0-9_-]{20,})$/
     ];
-    
+
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match) return match[1];
     }
-    
+
     return '';
   };
 
   // Extract Vimeo ID
   const extractVimeoId = (url: string): string => {
     if (!url) return '';
-    
+
     // Direct ID
     if (/^\d+$/.test(url)) {
       return url;
     }
-    
+
     // Extract from Vimeo URL
     const pattern = /vimeo\.com\/(\d+)/;
     const match = url.match(pattern);
-    
+
     return match ? match[1] : '';
   };
 
@@ -181,18 +181,18 @@ export function Portfolio() {
     try {
       const response = await fetch(`${API_URL}?action=getVideos`);
       const data = await response.json();
-      
+
       if (data.success && data.videos) {
         // Process each video to generate proper URLs and thumbnails
-        const transformedProjects = data.videos.map((video: any) => 
+        const transformedProjects = data.videos.map((video: any) =>
           processVideoData(video)
         );
-        
+
         setProjects(transformedProjects);
-        
+
         // Save to localStorage as backup
         localStorage.setItem('portfolioVideos', JSON.stringify(transformedProjects));
-        
+
         // Generate dynamic filters from categories
         updateFilters(transformedProjects);
       } else {
@@ -211,7 +211,7 @@ export function Portfolio() {
   const updateFilters = (projectsList: Project[]) => {
     const categories = Array.from(new Set(projectsList.map(p => p.category)))
       .filter(Boolean) as string[];
-    
+
     // Update filters state if needed
     if (categories.length > 0 && !categories.includes(activeFilter) && activeFilter !== 'Tous') {
       setActiveFilter('Tous');
@@ -242,11 +242,11 @@ export function Portfolio() {
         title: 'Vidéo Explicative SaaS',
         description: 'Une vidéo explicative pour une startup SaaS',
         videoId: 'dQw4w9WgXcQ',
-        category: 'Montage Vidéo',
+        category: 'Short Form',
         client: 'Startup Tech',
-        duration: '2:30',
+        duration: '0:30',
         type: 'YouTube',
-        videoLength: '150',
+        videoLength: '30',
         views: 12500,
         engagement: 85,
         thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
@@ -254,14 +254,14 @@ export function Portfolio() {
       },
       {
         id: '2',
-        title: 'Motion Design Logo',
-        description: 'Animation de logo en motion design',
+        title: 'Documentaire Voyage',
+        description: 'Un documentaire cinématographique sur le voyage',
         videoId: 'example2',
-        category: 'Motion Design',
-        client: 'Agence Creative',
-        duration: '0:45',
+        category: 'Long Form',
+        client: 'Travel Agency',
+        duration: '10:45',
         type: 'YouTube',
-        videoLength: '45',
+        videoLength: '645',
         views: 8500,
         engagement: 92,
         thumbnail: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&q=80',
@@ -269,10 +269,10 @@ export function Portfolio() {
       },
       {
         id: '3',
-        title: 'Publicité Tech Startup',
-        description: 'Publicité pour une startup technologique',
+        title: 'Publicité TikTok',
+        description: 'Publicité dynamique pour TikTok',
         videoId: 'example3',
-        category: 'Vidéos Explicatives',
+        category: 'Short Form',
         client: 'Tech Corp',
         duration: '1:15',
         type: 'YouTube',
@@ -293,8 +293,8 @@ export function Portfolio() {
   };
 
   // Filter projects
-  const filteredProjects = activeFilter === 'Tous' 
-    ? projects 
+  const filteredProjects = activeFilter === 'Tous'
+    ? projects
     : projects.filter(p => p.category === activeFilter);
 
   // Handle video click
@@ -310,7 +310,7 @@ export function Portfolio() {
   };
 
   // Initial load
-  useEffect(() => { 
+  useEffect(() => {
     fetchProjects();
 
     // Listen for portfolio refresh from admin panel
@@ -319,7 +319,7 @@ export function Portfolio() {
     };
 
     window.addEventListener('portfolioRefresh', handlePortfolioRefresh);
-    
+
     return () => {
       window.removeEventListener('portfolioRefresh', handlePortfolioRefresh);
     };
@@ -347,7 +347,7 @@ export function Portfolio() {
           <p className="text-zinc-400 text-xl max-w-2xl mx-auto">
             Découvrez nos projets récents - YouTube, Drive, Vimeo, TikTok et plus
           </p>
-          
+
           {/* Loading/Error State */}
           <div className="mt-4">
             {loading && (
@@ -359,7 +359,7 @@ export function Portfolio() {
             {error && !loading && (
               <div className="inline-flex items-center gap-2 text-red-400">
                 <span>{error}</span>
-                <button 
+                <button
                   onClick={fetchProjects}
                   className="text-white underline hover:no-underline"
                 >
@@ -376,11 +376,10 @@ export function Portfolio() {
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-6 py-2 rounded-lg transition-all duration-200 ${
-                activeFilter === filter
-                  ? 'bg-white text-black font-medium'
-                  : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-              }`}
+              className={`px-6 py-2 rounded-lg transition-all duration-200 ${activeFilter === filter
+                ? 'bg-white text-black font-medium'
+                : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                }`}
             >
               {filter}
             </button>
@@ -435,20 +434,20 @@ export function Portfolio() {
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
-                    
+
                     {/* Platform Badge */}
                     <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 bg-black/70 backdrop-blur-sm rounded text-xs text-white">
                       {getPlatformIcon(project.type)}
                       <span className="capitalize">{project.type}</span>
                     </div>
-                    
+
                     {/* Duration Badge */}
                     {project.duration && (
                       <div className="absolute top-3 right-3 px-2 py-1 bg-black/70 backdrop-blur-sm rounded text-xs text-white">
                         {project.duration}
                       </div>
                     )}
-                    
+
                     {/* Play Button Overlay */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl shadow-white/50 transform group-hover:scale-110 transition-transform">
@@ -464,7 +463,7 @@ export function Portfolio() {
                         {project.title}
                       </h3>
                     </div>
-                    
+
                     {/* Client and Stats */}
                     <div className="flex items-center justify-between mb-3">
                       {project.client && (
@@ -472,7 +471,7 @@ export function Portfolio() {
                           {project.client}
                         </span>
                       )}
-                      
+
                       {/* Stats */}
                       <div className="flex items-center gap-3 text-zinc-500 text-sm">
                         {project.views > 0 && (
@@ -483,7 +482,7 @@ export function Portfolio() {
                         )}
                       </div>
                     </div>
-                    
+
                     {/* Description */}
                     {project.description && (
                       <p className="text-zinc-400 text-sm mb-4 line-clamp-2">
@@ -496,7 +495,7 @@ export function Portfolio() {
                       <span className="inline-flex items-center gap-1 px-3 py-1 bg-zinc-800/50 rounded-full text-zinc-300 text-sm">
                         {project.category}
                       </span>
-                      
+
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleVideoClick(project)}
@@ -591,7 +590,7 @@ export function Portfolio() {
                         <p className="text-zinc-400">{selectedVideo.description}</p>
                       </div>
                     )}
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="bg-zinc-800/50 p-4 rounded-lg">
                         <p className="text-zinc-400 text-sm">Type</p>
