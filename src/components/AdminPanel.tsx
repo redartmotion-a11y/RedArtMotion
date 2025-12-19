@@ -26,12 +26,12 @@ export function AdminPanel() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
-  
+
   const [newVideo, setNewVideo] = useState({
     title: '',
     description: '',
     videoId: '',
-    category: 'Montage Vidéo',
+    category: 'Short Form',
     client: '',
     duration: '',
     type: 'YouTube',
@@ -39,7 +39,7 @@ export function AdminPanel() {
     views: 0,
     engagement: 0
   });
-  
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -58,7 +58,7 @@ export function AdminPanel() {
       );
       const data = await response.json();
       console.log('Fetched videos:', data); // Debug log
-      
+
       if (data.success) {
         // Add thumbnail and videoUrl based on videoId
         const videosWithMedia = data.videos.map((video: any) => ({
@@ -102,17 +102,17 @@ export function AdminPanel() {
   const extractYouTubeId = (url: string) => {
     if (!url) return '';
     if (url.length === 11 && !url.includes('/')) return url;
-    
+
     const patterns = [
       /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
       /^([a-zA-Z0-9_-]{11})$/
     ];
-    
+
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match) return match[1];
     }
-    
+
     return url;
   };
 
@@ -120,7 +120,7 @@ export function AdminPanel() {
     e.preventDefault();
     setError('');
     setSuccess('');
-    
+
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
     } else {
@@ -138,7 +138,7 @@ export function AdminPanel() {
       title: '',
       description: '',
       videoId: '',
-      category: 'Montage Vidéo',
+      category: 'Short Form',
       client: '',
       duration: '',
       type: 'YouTube',
@@ -157,7 +157,7 @@ export function AdminPanel() {
       setError('Le titre est requis');
       return;
     }
-    
+
     if (!newVideo.videoId.trim()) {
       setError('Le Video ID est requis');
       return;
@@ -169,11 +169,11 @@ export function AdminPanel() {
 
     try {
       console.log('Adding video:', newVideo); // Debug log
-      
+
       const response = await fetch(API_URL, {
         method: 'POST',
         mode: 'no-cors', // FIXED: Add no-cors mode for Google Apps Script
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
@@ -195,17 +195,17 @@ export function AdminPanel() {
 
       // FIXED: Handle response differently for no-cors mode
       console.log('Response status:', response.status);
-      
+
       // Since we're using no-cors, we can't read the response
       // But we can assume it worked if no error
       setSuccess('✅ Vidéo ajoutée avec succès');
-      
+
       // Reset form
       setNewVideo({
         title: '',
         description: '',
         videoId: '',
-        category: 'Montage Vidéo',
+        category: 'Short Form',
         client: '',
         duration: '',
         type: 'YouTube',
@@ -213,15 +213,15 @@ export function AdminPanel() {
         views: 0,
         engagement: 0
       });
-      
+
       // Refresh videos list after a short delay
       setTimeout(() => {
         fetchVideos();
       }, 1000);
-      
+
       // Notify portfolio to refresh
       window.dispatchEvent(new CustomEvent('portfolioRefresh'));
-      
+
     } catch (error) {
       console.error('Error adding video:', error);
       setError('Erreur lors de l\'ajout. Vérifiez la console pour plus de détails.');
@@ -232,12 +232,12 @@ export function AdminPanel() {
 
   const handleUpdateVideo = async () => {
     if (!editingVideo) return;
-    
+
     if (!editingVideo.title.trim()) {
       setError('Le titre est requis');
       return;
     }
-    
+
     if (!editingVideo.videoId.trim()) {
       setError('Le Video ID est requis');
       return;
@@ -249,11 +249,11 @@ export function AdminPanel() {
 
     try {
       console.log('Updating video:', editingVideo);
-      
+
       const response = await fetch(API_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
@@ -275,17 +275,17 @@ export function AdminPanel() {
       });
 
       console.log('Update response status:', response.status);
-      
+
       setSuccess('✅ Vidéo mise à jour avec succès');
       setEditingVideo(null);
-      
+
       // Refresh videos list
       setTimeout(() => {
         fetchVideos();
       }, 1000);
-      
+
       window.dispatchEvent(new CustomEvent('portfolioRefresh'));
-      
+
     } catch (error) {
       console.error('Error updating video:', error);
       setError('Erreur lors de la mise à jour');
@@ -303,11 +303,11 @@ export function AdminPanel() {
 
     try {
       console.log('Deleting video ID:', id);
-      
+
       const response = await fetch(API_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
@@ -319,16 +319,16 @@ export function AdminPanel() {
       });
 
       console.log('Delete response status:', response.status);
-      
+
       setSuccess('✅ Vidéo supprimée avec succès');
-      
+
       // Refresh videos list
       setTimeout(() => {
         fetchVideos();
       }, 1000);
-      
+
       window.dispatchEvent(new CustomEvent('portfolioRefresh'));
-      
+
     } catch (error) {
       console.error('Error deleting video:', error);
       setError('Erreur lors de la suppression');
@@ -344,7 +344,7 @@ export function AdminPanel() {
       title: '',
       description: '',
       videoId: '',
-      category: 'Montage Vidéo',
+      category: 'Short Form',
       client: '',
       duration: '',
       type: 'YouTube',
@@ -374,7 +374,7 @@ export function AdminPanel() {
       title: '',
       description: '',
       videoId: '',
-      category: 'Montage Vidéo',
+      category: 'Short Form',
       client: '',
       duration: '',
       type: 'YouTube',
@@ -545,9 +545,9 @@ export function AdminPanel() {
                       <input
                         type="text"
                         value={editingVideo ? editingVideo.title : newVideo.title}
-                        onChange={(e) => editingVideo 
-                          ? setEditingVideo({...editingVideo, title: e.target.value})
-                          : setNewVideo({...newVideo, title: e.target.value})
+                        onChange={(e) => editingVideo
+                          ? setEditingVideo({ ...editingVideo, title: e.target.value })
+                          : setNewVideo({ ...newVideo, title: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="Nom de la vidéo"
@@ -560,8 +560,8 @@ export function AdminPanel() {
                       <textarea
                         value={editingVideo ? editingVideo.description : newVideo.description}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, description: e.target.value})
-                          : setNewVideo({...newVideo, description: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, description: e.target.value })
+                          : setNewVideo({ ...newVideo, description: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="Description de la vidéo"
@@ -575,8 +575,8 @@ export function AdminPanel() {
                         type="text"
                         value={editingVideo ? editingVideo.videoId : newVideo.videoId}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, videoId: e.target.value})
-                          : setNewVideo({...newVideo, videoId: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, videoId: e.target.value })
+                          : setNewVideo({ ...newVideo, videoId: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="dQw4w9WgXcQ ou URL YouTube"
@@ -592,17 +592,13 @@ export function AdminPanel() {
                       <select
                         value={editingVideo ? editingVideo.category : newVideo.category}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, category: e.target.value})
-                          : setNewVideo({...newVideo, category: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, category: e.target.value })
+                          : setNewVideo({ ...newVideo, category: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                       >
-                        <option>Montage Vidéo</option>
-                        <option>Motion Design</option>
-                        <option>Vidéos Explicatives</option>
-                        <option>Color Grading</option>
-                        <option>Publicité</option>
-                        <option>Animation</option>
+                        <option>Short Form</option>
+                        <option>Long Form</option>
                       </select>
                     </div>
 
@@ -612,8 +608,8 @@ export function AdminPanel() {
                         type="text"
                         value={editingVideo ? editingVideo.client : newVideo.client}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, client: e.target.value})
-                          : setNewVideo({...newVideo, client: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, client: e.target.value })
+                          : setNewVideo({ ...newVideo, client: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="Nom du client"
@@ -626,8 +622,8 @@ export function AdminPanel() {
                         type="text"
                         value={editingVideo ? editingVideo.duration : newVideo.duration}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, duration: e.target.value})
-                          : setNewVideo({...newVideo, duration: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, duration: e.target.value })
+                          : setNewVideo({ ...newVideo, duration: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="2:30"
@@ -639,8 +635,8 @@ export function AdminPanel() {
                       <select
                         value={editingVideo ? editingVideo.type : newVideo.type}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, type: e.target.value})
-                          : setNewVideo({...newVideo, type: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, type: e.target.value })
+                          : setNewVideo({ ...newVideo, type: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                       >
@@ -658,8 +654,8 @@ export function AdminPanel() {
                         type="number"
                         value={editingVideo ? editingVideo.videoLength : newVideo.videoLength}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, videoLength: e.target.value})
-                          : setNewVideo({...newVideo, videoLength: e.target.value})
+                          ? setEditingVideo({ ...editingVideo, videoLength: e.target.value })
+                          : setNewVideo({ ...newVideo, videoLength: e.target.value })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="150"
@@ -672,8 +668,8 @@ export function AdminPanel() {
                         type="number"
                         value={editingVideo ? editingVideo.views : newVideo.views}
                         onChange={(e) => editingVideo
-                          ? setEditingVideo({...editingVideo, views: parseInt(e.target.value) || 0})
-                          : setNewVideo({...newVideo, views: parseInt(e.target.value) || 0})
+                          ? setEditingVideo({ ...editingVideo, views: parseInt(e.target.value) || 0 })
+                          : setNewVideo({ ...newVideo, views: parseInt(e.target.value) || 0 })
                         }
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="1000"
@@ -690,8 +686,8 @@ export function AdminPanel() {
                         onChange={(e) => {
                           const value = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
                           editingVideo
-                            ? setEditingVideo({...editingVideo, engagement: value})
-                            : setNewVideo({...newVideo, engagement: value})
+                            ? setEditingVideo({ ...editingVideo, engagement: value })
+                            : setNewVideo({ ...newVideo, engagement: value })
                         }}
                         className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 transition-colors"
                         placeholder="85"
@@ -749,7 +745,7 @@ export function AdminPanel() {
                       </div>
                     )}
                   </div>
-                  
+
                   {videos.length === 0 ? (
                     <div className="text-center py-8 text-zinc-400">
                       {loading ? 'Chargement des vidéos...' : 'Aucune vidéo dans la base de données. Ajoutez-en une !'}
