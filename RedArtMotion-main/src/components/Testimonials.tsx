@@ -2,6 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Quote, Send, User, MessageSquare, Loader, RefreshCw, Heart } from 'lucide-react';
 
+interface Testimonial {
+  name: string;
+  role: string;
+  rating: number;
+  text: string;
+  timestamp?: string;
+  source?: string;
+}
+
 export function Testimonials() {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -14,10 +23,10 @@ export function Testimonials() {
   });
 
   // Google Apps Script URL
-  const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzPW0PvdToWVJ2qw3TSHBDPTJB_gv16eUUEytpCi_rqJJAeySK1KZDYWWU3UIrcELNI/exec';
+  const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyyiRvJDdHqKHoG8CSEx0EOvycD8aK99S8cRle3yVoqFyso4D7DqZqluBpfjxtG09Ki/exec';
 
-  const [testimonials, setTestimonials] = useState([]);
-  const [apiStatus, setApiStatus] = useState('loading');
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [apiStatus, setApiStatus] = useState<'loading' | 'online' | 'offline'>('loading');
 
   useEffect(() => {
     fetchTestimonialsFromGoogleSheets();
@@ -40,7 +49,7 @@ export function Testimonials() {
       const result = await response.json();
 
       if (result.success && Array.isArray(result.testimonials)) {
-        const processedTestimonials = result.testimonials.map((item) => ({
+        const processedTestimonials = result.testimonials.map((item: any) => ({
           name: item.Name || 'Client',
           role: 'Satisfied Client',
           rating: parseInt(item.Rating) || 0,
@@ -106,7 +115,7 @@ export function Testimonials() {
   ];
 
   // Form handling
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -115,7 +124,7 @@ export function Testimonials() {
   };
 
   // SUBMISSION FUNCTION
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
@@ -199,11 +208,11 @@ export function Testimonials() {
   };
 
   // Star handling
-  const handleStarClick = (value) => {
+  const handleStarClick = (value: number) => {
     setRating(value === rating ? 0 : value);
   };
 
-  const handleStarHover = (value) => {
+  const handleStarHover = (value: number) => {
     setHoverRating(value);
   };
 
@@ -503,7 +512,7 @@ export function Testimonials() {
                   required
                   minLength={10}
                   maxLength={500}
-                  rows="4"
+                  rows={4}
                   className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 transition-all resize-none disabled:opacity-50"
                   placeholder="Describe your experience with our services..."
                   disabled={isSubmitting}

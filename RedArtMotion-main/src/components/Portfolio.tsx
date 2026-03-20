@@ -26,7 +26,7 @@ export function Portfolio() {
   const [error, setError] = useState('');
   const [videoModalOpen, setVideoModalOpen] = useState(false);
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzPW0PvdToWVJ2qw3TSHBDPTJB_gv16eUUEytpCi_rqJJAeySK1KZDYWWU3UIrcELNI/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyyiRvJDdHqKHoG8CSEx0EOvycD8aK99S8cRle3yVoqFyso4D7DqZqluBpfjxtG09Ki/exec';
 
   // Function to get video platform icon
   const getPlatformIcon = (type: string) => {

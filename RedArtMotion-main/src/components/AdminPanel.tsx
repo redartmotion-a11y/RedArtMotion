@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Trash2, Eye, Lock, LogOut, Save, Edit, RefreshCw } from 'lucide-react';
+import { X, Plus, Trash2, Eye, Lock, LogOut, Save, Edit, RefreshCw, Film, LayoutTemplate } from 'lucide-react';
 
 interface Video {
   id: string;
@@ -18,6 +18,24 @@ interface Video {
   videoUrl: string;
 }
 
+type HeroPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+interface HeroVideo {
+  id: string;
+  title: string;
+  videoId: string;
+  position: HeroPosition;
+}
+
+const HERO_POSITIONS: HeroPosition[] = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+const DEFAULT_HERO_VIDEOS: HeroVideo[] = [
+  { id: '1', title: 'Motion Reel', videoId: 'dQw4w9WgXcQ', position: 'top-left' },
+  { id: '2', title: 'Brand Video', videoId: 'dQw4w9WgXcQ', position: 'top-right' },
+  { id: '3', title: 'Social Clip', videoId: 'dQw4w9WgXcQ', position: 'bottom-left' },
+  { id: '4', title: 'Ad Film', videoId: 'dQw4w9WgXcQ', position: 'bottom-right' },
+];
+
 export function AdminPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,6 +44,16 @@ export function AdminPanel() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingVideo, setEditingVideo] = useState<Video | null>(null);
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'hero'>('portfolio');
+
+  // Hero Videos State
+  const [heroVideos, setHeroVideos] = useState<HeroVideo[]>(DEFAULT_HERO_VIDEOS);
+  const [editingHeroVideo, setEditingHeroVideo] = useState<HeroVideo | null>(null);
+  const [newHeroVideo, setNewHeroVideo] = useState<{ title: string; videoId: string; position: HeroPosition }>({
+    title: '',
+    videoId: '',
+    position: 'top-left',
+  });
 
   const [newVideo, setNewVideo] = useState({
     title: '',
@@ -46,7 +74,7 @@ export function AdminPanel() {
   const ADMIN_EMAIL = 'redareda@reda.com';
   const ADMIN_PASSWORD = 'redamotiondevbymehdi';
   const ADMIN_TOKEN = 'reda_admin_token';
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzPW0PvdToWVJ2qw3TSHBDPTJB_gv16eUUEytpCi_rqJJAeySK1KZDYWWU3UIrcELNI/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyyiRvJDdHqKHoG8CSEx0EOvycD8aK99S8cRle3yVoqFyso4D7DqZqluBpfjxtG09Ki/exec';
 
   // Fetch videos from Google Sheets
   const fetchVideos = async () => {
@@ -80,10 +108,26 @@ export function AdminPanel() {
     }
   };
 
+  // Fetch hero videos from Google Sheets
+  const fetchHeroVideos = async () => {
+    try {
+      const response = await fetch(`${API_URL}?action=getHeroVideos`);
+      const data = await response.json();
+      if (data.success && data.videos && data.videos.length > 0) {
+        setHeroVideos(data.videos);
+        // Refresh local view
+        window.dispatchEvent(new CustomEvent('heroVideosUpdated'));
+      }
+    } catch (error) {
+      console.error('Error fetching hero videos:', error);
+    }
+  };
+
   // Load videos when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchVideos();
+      fetchHeroVideos();
     }
   }, [isAuthenticated]);
 
@@ -99,6 +143,94 @@ export function AdminPanel() {
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // ── Hero Videos Handlers ──────────────────────────────────────────────────
+  const saveHeroVideos = async (updated: HeroVideo[]) => {
+    setLoading(true);
+    setHeroVideos(updated);
+    
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'updateHeroVideos',
+          token: ADMIN_TOKEN,
+          videos: updated
+        })
+      });
+      
+      setSuccess('✅ Hero videos synced to database!');
+      window.dispatchEvent(new CustomEvent('heroVideosUpdated'));
+      
+      // Verification fetch after delay
+      setTimeout(fetchHeroVideos, 1500);
+    } catch (error) {
+      console.error('Error saving hero videos:', error);
+      setError('Failed to sync to database. Changes might be local only.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddHeroVideo = () => {
+    if (!newHeroVideo.title.trim() || !newHeroVideo.videoId.trim()) {
+      setError('Title and Video ID are required');
+      return;
+    }
+
+    if (heroVideos.length >= 4) {
+      setError('Maximum 4 hero videos allowed');
+      return;
+    }
+
+    // Auto-assign position if the current selection is already taken
+    let finalPosition = newHeroVideo.position;
+    const takenPositions = heroVideos.map(v => v.position);
+    if (takenPositions.includes(finalPosition)) {
+      const available = HERO_POSITIONS.find(p => !takenPositions.includes(p));
+      if (available) finalPosition = available;
+    }
+
+    const updated = [
+      ...heroVideos,
+      { ...newHeroVideo, position: finalPosition, id: Date.now().toString() },
+    ].slice(0, 4);
+    
+    saveHeroVideos(updated);
+    
+    // Set default position for next video to the first available one
+    const newTaken = updated.map(v => v.position);
+    const next = HERO_POSITIONS.find(p => !newTaken.includes(p)) || 'top-left';
+    setNewHeroVideo({ title: '', videoId: '', position: next });
+    setSuccess(`✅ Hero video added to ${finalPosition.replace('-', ' ')}!`);
+  };
+
+  const handleUpdateHeroVideo = () => {
+    if (!editingHeroVideo) return;
+    if (!editingHeroVideo.title.trim() || !editingHeroVideo.videoId.trim()) {
+      setError('Title and Video ID are required');
+      return;
+    }
+    const updated = heroVideos.map((v) => v.id === editingHeroVideo.id ? editingHeroVideo : v);
+    saveHeroVideos(updated);
+    setEditingHeroVideo(null);
+    setSuccess('✅ Hero video updated!');
+  };
+
+  const handleDeleteHeroVideo = (id: string) => {
+    if (!confirm('Delete this hero video?')) return;
+    const updated = heroVideos.filter((v) => v.id !== id);
+    saveHeroVideos(updated);
+    setSuccess('✅ Hero video deleted!');
+  };
+
+  const handleResetHeroVideos = () => {
+    if (!confirm('Reset to default hero videos?')) return;
+    saveHeroVideos(DEFAULT_HERO_VIDEOS);
+    setSuccess('✅ Hero videos reset to defaults!');
+  };
 
   const extractYouTubeId = (url: string) => {
     if (!url) return '';
@@ -492,6 +624,45 @@ export function AdminPanel() {
             ) : (
               // Admin Dashboard
               <div className="space-y-8">
+                {/* Tabs */}
+                <div className="flex gap-1 bg-zinc-800/60 p-1 rounded-xl w-fit">
+                  <button
+                    onClick={() => { setActiveTab('portfolio'); setError(''); setSuccess(''); }}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      activeTab === 'portfolio'
+                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <Film className="w-4 h-4" />
+                    Portfolio Videos
+                  </button>
+                  <button
+                    onClick={() => { setActiveTab('hero'); setError(''); setSuccess(''); }}
+                    className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      activeTab === 'hero'
+                        ? 'bg-pink-600 text-white shadow-lg shadow-pink-500/20'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <LayoutTemplate className="w-4 h-4" />
+                    Hero Videos
+                  </button>
+                </div>
+                {/* ── Shared Messages ── */}
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg">
+                    {error}
+                  </div>
+                )}
+                {success && (
+                  <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-lg">
+                    {success}
+                  </div>
+                )}
+
+                {/* ── Portfolio Tab ── */}
+                {activeTab === 'portfolio' && (<div className="space-y-6">
                 {/* Header with actions */}
                 <div className="flex justify-between items-center">
                   <div>
@@ -519,19 +690,6 @@ export function AdminPanel() {
                     </button>
                   </div>
                 </div>
-
-                {/* Messages */}
-                {error && (
-                  <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg">
-                    {error}
-                  </div>
-                )}
-
-                {success && (
-                  <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-lg">
-                    {success}
-                  </div>
-                )}
 
                 {/* Video Form */}
                 <div id="video-form" className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
@@ -818,6 +976,168 @@ export function AdminPanel() {
                     </div>
                   )}
                 </div>
+                </div>)}
+
+                {/* ── Hero Videos Tab ───────────────────────────────────── */}
+                {activeTab === 'hero' && (
+                  <div className="space-y-6">
+                    {/* Header */}
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-white text-xl">Hero Section Videos</h3>
+                        <p className="text-zinc-400 text-sm mt-1">
+                          Manage the 4 floating video cards shown in the hero. Saved locally.
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleResetHeroVideos}
+                        className="flex items-center gap-2 px-4 py-2 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700 transition-colors text-sm"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        Reset Defaults
+                      </button>
+                    </div>
+
+                    {/* Add / Edit Form */}
+                    <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
+                      <h4 className="text-white mb-4 flex items-center gap-2">
+                        <Plus className="w-5 h-5" />
+                        {editingHeroVideo ? 'Edit Hero Video' : 'Add Hero Video'}
+                      </h4>
+
+                      <div className="grid md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <label className="block text-zinc-300 mb-2 text-sm">Title *</label>
+                          <input
+                            type="text"
+                            value={editingHeroVideo ? editingHeroVideo.title : newHeroVideo.title}
+                            onChange={(e) => editingHeroVideo
+                              ? setEditingHeroVideo({ ...editingHeroVideo, title: e.target.value })
+                              : setNewHeroVideo({ ...newHeroVideo, title: e.target.value })
+                            }
+                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-pink-500 transition-colors"
+                            placeholder="Motion Reel"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-zinc-300 mb-2 text-sm">Video ID / URL *</label>
+                          <input
+                            type="text"
+                            value={editingHeroVideo ? editingHeroVideo.videoId : newHeroVideo.videoId}
+                            onChange={(e) => editingHeroVideo
+                              ? setEditingHeroVideo({ ...editingHeroVideo, videoId: e.target.value })
+                              : setNewHeroVideo({ ...newHeroVideo, videoId: e.target.value })
+                            }
+                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-pink-500 transition-colors"
+                            placeholder="dQw4w9WgXcQ or YouTube URL"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-zinc-300 mb-2 text-sm">Position</label>
+                          <select
+                            value={editingHeroVideo ? editingHeroVideo.position : newHeroVideo.position}
+                            onChange={(e) => {
+                              const pos = e.target.value as HeroPosition;
+                              editingHeroVideo
+                                ? setEditingHeroVideo({ ...editingHeroVideo, position: pos })
+                                : setNewHeroVideo({ ...newHeroVideo, position: pos });
+                            }}
+                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-pink-500 transition-colors"
+                          >
+                            <option value="top-left">Top Left</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        {editingHeroVideo ? (
+                          <>
+                            <button
+                              onClick={handleUpdateHeroVideo}
+                              className="px-6 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all duration-300 flex items-center gap-2"
+                            >
+                              <Save className="w-4 h-4" />
+                              Update
+                            </button>
+                            <button
+                              onClick={() => setEditingHeroVideo(null)}
+                              className="px-6 py-2 bg-zinc-700 text-white rounded-lg hover:bg-zinc-600 transition-all duration-300"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={handleAddHeroVideo}
+                            disabled={heroVideos.length >= 4}
+                            className="px-6 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all duration-300 flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Video {heroVideos.length >= 4 ? '(max 4)' : ''}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Hero Videos List */}
+                    <div>
+                      <h4 className="text-white mb-3">Current Hero Videos ({heroVideos.length}/4)</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {heroVideos.map((hv) => {
+                          const ytId = hv.videoId.length === 11 ? hv.videoId
+                            : (hv.videoId.match(/[?&]v=([a-zA-Z0-9_-]{11})/)?.[1]
+                              || hv.videoId.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)?.[1]
+                              || hv.videoId);
+                          const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+                          return (
+                            <div
+                              key={hv.id}
+                              className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 flex gap-4 hover:border-zinc-600 transition-colors"
+                            >
+                              <img
+                                src={thumb}
+                                alt={hv.title}
+                                className="w-24 h-16 object-cover rounded-lg"
+                                onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=200&q=60'; }}
+                              />
+                              <div className="flex-1">
+                                <h5 className="text-white text-sm font-medium mb-1">{hv.title}</h5>
+                                <p className="text-pink-400 text-xs mb-1 capitalize">{hv.position.replace('-', ' ')}</p>
+                                <p className="text-zinc-500 text-xs truncate">{hv.videoId}</p>
+                              </div>
+                              <div className="flex flex-col gap-2 justify-center">
+                                <button
+                                  onClick={() => setEditingHeroVideo(hv)}
+                                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                                  title="Edit"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteHeroVideo(hv.id)}
+                                  className="text-red-400 hover:text-red-300 transition-colors"
+                                  title="Delete"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        {heroVideos.length === 0 && (
+                          <div className="col-span-2 text-center py-8 text-zinc-400">
+                            No hero videos set. Add one above!
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
