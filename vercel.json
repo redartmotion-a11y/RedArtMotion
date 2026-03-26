@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd RedArtMotion-main && npm run build",
+  "installCommand": "cd RedArtMotion-main && npm install",
+  "outputDirectory": "RedArtMotion-main/build",
+  "framework": "vite"
+}
