@@ -742,8 +742,7 @@ export function AdminPanel() {
                         required
                       />
                       <p className="text-zinc-500 text-xs mt-1">
-                        Example: dQw4w9WgXcQ or https://youtube.com/watch?v=dQw4w9WgXcQ
-                      </p>
+                       </p>
                     </div>
 
                     <div>
