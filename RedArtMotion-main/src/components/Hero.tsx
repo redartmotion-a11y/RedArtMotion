@@ -11,13 +11,6 @@ interface HeroVideo {
   position: HeroPosition;
 }
 
-const DEFAULT_HERO_VIDEOS: HeroVideo[] = [
-  { id: '1', title: 'Motion Reel', videoId: 'dQw4w9WgXcQ', position: 'top-left' },
-  { id: '2', title: 'Brand Video', videoId: 'dQw4w9WgXcQ', position: 'top-right' },
-  { id: '3', title: 'Social Clip', videoId: 'dQw4w9WgXcQ', position: 'bottom-left' },
-  { id: '4', title: 'Ad Film', videoId: 'dQw4w9WgXcQ', position: 'bottom-right' },
-];
-
 const extractYouTubeId = (url: string) => {
   if (!url) return '';
   if (url.length === 11 && !url.includes('/')) return url;
@@ -33,7 +26,14 @@ const extractYouTubeId = (url: string) => {
 };
 
 export function Hero() {
-  const [heroVideos, setHeroVideos] = useState<HeroVideo[]>(DEFAULT_HERO_VIDEOS);
+  const [heroVideos, setHeroVideos] = useState<HeroVideo[]>(() => {
+    try {
+      const stored = localStorage.getItem('heroVideos');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const API_URL = 'https://script.google.com/macros/s/AKfycbyyiRvJDdHqKHoG8CSEx0EOvycD8aK99S8cRle3yVoqFyso4D7DqZqluBpfjxtG09Ki/exec';
 
