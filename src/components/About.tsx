@@ -8,30 +8,30 @@ export function About() {
     {
       icon: Award,
       title: 'Excellence',
-      description: 'Nous visons la perfection dans chaque projet, avec une attention méticuleuse aux détails'
+      description: 'We strive for perfection in every project, with meticulous attention to detail'
     },
     {
       icon: Users,
       title: 'Collaboration',
-      description: 'Votre vision est au cœur de notre processus. Nous travaillons main dans la main avec vous'
+      description: 'Your vision is at the heart of our process. We work hand in hand with you'
     },
     {
       icon: Zap,
-      title: 'Réactivité',
-      description: 'Délais respectés et communication fluide. Votre temps est précieux'
+      title: 'Responsiveness',
+      description: 'Respected deadlines and fluid communication. Your time is precious'
     },
     {
       icon: Heart,
       title: 'Passion',
-      description: 'Chaque vidéo est créée avec passion et dévouement pour raconter votre histoire'
+      description: 'Every video is created with passion and dedication to tell your story'
     }
   ];
 
   const stats = [
-    { value: '5+', label: 'Années d\'expérience' },
-    { value: '500+', label: 'Projets réalisés' },
-    { value: '200+', label: 'Clients satisfaits' },
-    { value: '15+', label: 'Prix & reconnaissances' }
+    { value: '5+', label: 'Years of Experience' },
+    { value: '500+', label: 'Projects Completed' },
+    { value: '200+', label: 'Satisfied Clients' },
+    { value: '15+', label: 'Awards & Recognition' }
   ];
 
   return (
@@ -47,13 +47,13 @@ export function About() {
           className="text-center mb-16"
         >
           <div className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white mb-4">
-            À propos
+            About Us
           </div>
           <h2 className="text-white mb-4">
-            Votre partenaire créatif
+            Your Creative Partner
           </h2>
           <p className="text-zinc-400 text-xl max-w-2xl mx-auto">
-            RedArtMotion est un studio spécialisé dans la création de vidéos qui convertissent
+            RedArtMotion is a studio specialized in creating videos that convert
           </p>
         </motion.div>
 
@@ -76,7 +76,7 @@ export function About() {
             {/* Floating Stats Card */}
             <div className="absolute -bottom-6 -right-6 bg-zinc-950 border border-zinc-800 rounded-xl p-6 shadow-xl">
               <div className="text-3xl text-white mb-1">98%</div>
-              <div className="text-zinc-400 text-sm">Taux de satisfaction</div>
+              <div className="text-zinc-400 text-sm">Satisfaction Rate</div>
             </div>
           </motion.div>
 
@@ -87,22 +87,22 @@ export function About() {
             viewport={{ once: true }}
           >
             <h3 className="text-white mb-6">
-              Nous transformons vos idées en vidéos qui captivent et convertissent
+              We transform your ideas into videos that captivate and convert
             </h3>
             <div className="space-y-4 text-zinc-400 mb-8">
               <p>
-                Depuis plus de 5 ans, nous accompagnons les entrepreneurs, créateurs de contenu 
-                et entreprises tech dans la création de vidéos professionnelles qui font la différence.
+                For over 5 years, we have been supporting entrepreneurs, content creators,
+                and tech companies in creating professional videos that make a difference.
               </p>
               <p>
-                Notre expertise couvre tous les aspects de la production vidéo : du montage au 
-                motion design, en passant par le color grading et le sound design. Nous maîtrisons 
-                les codes de chaque plateforme et adaptons nos créations à vos objectifs.
+                Our expertise covers all aspects of video production: from editing to
+                motion design, including color grading and sound design. We master
+                the codes of each platform and adapt our creations to your goals.
               </p>
               <p>
-                Que vous ayez besoin d'une vidéo explicative pour votre SaaS, de contenus engageants 
-                pour YouTube, ou de formations vidéo percutantes, nous avons l'expérience et les 
-                compétences pour donner vie à votre vision.
+                Whether you need an explainer video for your SaaS, engaging content
+                for YouTube, or impactful video training, we have the experience and
+                skills to bring your vision to life.
               </p>
             </div>
 

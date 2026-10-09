@@ -14,8 +14,8 @@ import { AdminPanel } from './components/AdminPanel';
 export default function App() {
   useEffect(() => {
     // Set document title and meta tags
-    document.title = 'RedArtMotion - Studio de Montage Vidéo & Motion Design | Expert en Production Vidéo';
-    
+    document.title = 'RedArtMotion - Video Editing & Motion Design Studio | Expert Video Production';
+
     // Update or create meta tags
     const updateMeta = (name: string, content: string, isProperty = false) => {
       const attribute = isProperty ? 'property' : 'name';
@@ -29,22 +29,22 @@ export default function App() {
     };
 
     // Primary Meta Tags
-    updateMeta('description', 'RedArtMotion, studio professionnel de montage vidéo et motion design basé en Algérie. Services complets : montage vidéo, motion design, color grading, mixage audio pour SaaS, Tech, Coaches et YouTubers.');
-    updateMeta('keywords', 'montage vidéo, motion design, color grading, mixage audio, storyboard, animation, vidéo explicative, production vidéo, SaaS, Tech, YouTubers, Algérie, RedArtMotion');
+    updateMeta('description', 'RedArtMotion, professional video editing and motion design studio. Complete services: video editing, motion design, color grading, audio mixing for SaaS, Tech, Coaches, and YouTubers.');
+    updateMeta('keywords', 'video editing, motion design, color grading, audio mixing, storyboard, animation, explainer video, video production, SaaS, Tech, YouTubers, RedArtMotion');
     updateMeta('author', 'RedArtMotion');
     updateMeta('robots', 'index, follow');
 
     // Open Graph
     updateMeta('og:type', 'website', true);
     updateMeta('og:url', 'https://redartmotion.com/', true);
-    updateMeta('og:title', 'RedArtMotion - Studio de Montage Vidéo & Motion Design', true);
-    updateMeta('og:description', 'Studio professionnel de montage vidéo et motion design. Transformez vos idées en vidéos percutantes avec nos services complets de production vidéo.', true);
-    updateMeta('og:locale', 'fr_FR', true);
+    updateMeta('og:title', 'RedArtMotion - Video Editing & Motion Design Studio', true);
+    updateMeta('og:description', 'Professional video editing and motion design studio. Transform your ideas into impactful videos with our complete production services.', true);
+    updateMeta('og:locale', 'en_US', true);
 
     // Twitter
     updateMeta('twitter:card', 'summary_large_image');
-    updateMeta('twitter:title', 'RedArtMotion - Studio de Montage Vidéo & Motion Design');
-    updateMeta('twitter:description', 'Studio professionnel de montage vidéo et motion design. Services complets pour créateurs de contenu et entreprises innovantes.');
+    updateMeta('twitter:title', 'RedArtMotion - Video Editing & Motion Design Studio');
+    updateMeta('twitter:description', 'Professional video editing and motion design studio. Complete services for content creators and innovative companies.');
 
     // Mobile
     updateMeta('theme-color', '#09090b');
@@ -57,7 +57,7 @@ export default function App() {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "name": "RedArtMotion",
-      "description": "Studio de montage vidéo et motion design professionnel",
+      "description": "Professional video editing and motion design studio",
       "url": "https://redartmotion.com",
       "telephone": "+213550651047",
       "email": "redartmotion@gmail.com",
@@ -66,10 +66,10 @@ export default function App() {
         "addressCountry": "DZ"
       },
       "sameAs": [
-        "https://www.instagram.com/redart.vfx/"
+        "https://www.instagram.com/redart_motion/"
       ],
       "priceRange": "$$",
-      "serviceType": ["Video Editing", "Motion Design", "Color Grading", "Audio Mixing", "Video Production"]
+      "serviceType": ["Short Form", "Motion Design", "Color Grading", "Audio Mixing", "Video Production"]
     };
 
     const structuredDataOrg = {
@@ -82,10 +82,10 @@ export default function App() {
         "telephone": "+213550651047",
         "contactType": "customer service",
         "email": "redartmotion@gmail.com",
-        "availableLanguage": ["French", "Arabic", "English"]
+        "availableLanguage": ["English", "French", "Arabic"]
       },
       "sameAs": [
-        "https://www.instagram.com/redart.vfx/"
+        "https://www.instagram.com/redart_motion/"
       ]
     };
 
@@ -111,7 +111,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-zinc-950 text-white selection:bg-white selection:text-black">
       <AdminPanel />
       <Navbar />
       <Hero />

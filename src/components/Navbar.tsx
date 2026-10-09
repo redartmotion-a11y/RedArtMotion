@@ -1,5 +1,5 @@
-  import React, { useState, useEffect } from 'react';
-import { Menu, X, Play } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import logo from 'figma:asset/81b1bd4720a35c1b1ae962b568c1d6eb74b7618f.png';
 
 export function Navbar() {
@@ -16,9 +16,9 @@ export function Navbar() {
 
   const navLinks = [
     { href: '#services', label: 'Services' },
-    { href: '#processus', label: 'Processus' },
+    { href: '#process', label: 'Process' },
     { href: '#portfolio', label: 'Portfolio' },
-    { href: '#about', label: 'Avis' },
+    { href: '#testimonials', label: 'Reviews' },
     { href: '#faq', label: 'FAQ' },
   ];
 
@@ -30,12 +30,12 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
-            <img 
-              src={logo} 
-              alt="RedArtMotion Logo" 
+            <img
+              src={logo}
+              alt="RedArtMotion Logo"
               className="w-10 h-10 object-contain transform group-hover:scale-110 transition-transform"
             />
-            <span className="text-white text-xl tracking-tight">
+            <span className="text-white text-xl tracking-tight font-semibold">
               Red<span className="text-white">Art</span>Motion
             </span>
           </a>
@@ -46,7 +46,7 @@ export function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-zinc-300 hover:text-white transition-colors relative group"
+                className="text-zinc-300 hover:text-white transition-colors relative group text-sm font-medium"
               >
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300" />
@@ -54,9 +54,9 @@ export function Navbar() {
             ))}
             <a
               href="#contact"
-              className="px-6 py-2.5 bg-white text-black rounded-lg hover:bg-zinc-100 transition-colors"
+              className="px-6 py-2.5 bg-white text-black rounded-full hover:bg-zinc-100 transition-colors text-sm font-medium shadow-sm hover:shadow-md"
             >
-              Réserver un appel
+              Book a Call
             </a>
           </div>
 
@@ -79,7 +79,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block text-zinc-300 hover:text-white transition-colors py-2"
+                className="block text-zinc-300 hover:text-white transition-colors py-2 text-base font-medium"
               >
                 {link.label}
               </a>
@@ -87,9 +87,9 @@ export function Navbar() {
             <a
               href="#contact"
               onClick={() => setIsOpen(false)}
-              className="block px-6 py-2.5 bg-white text-black rounded-lg hover:bg-zinc-100 transition-colors text-center"
+              className="block px-6 py-2.5 bg-white text-black rounded-full hover:bg-zinc-100 transition-colors text-center text-sm font-medium"
             >
-              Réserver un appel
+              Book a Call
             </a>
           </div>
         </div>

@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { Play, Instagram, Mail } from 'lucide-react';
 import logo from 'figma:asset/81b1bd4720a35c1b1ae962b568c1d6eb74b7618f.png';
 
@@ -7,27 +7,27 @@ export function Footer() {
 
   const footerLinks = {
     services: [
-      { label: 'Montage vidéo', href: '#services' },
-      { label: 'Motion design', href: '#services' },
-      { label: 'Vidéos explicatives', href: '#services' },
-      { label: 'Color grading', href: '#services' }
+      { label: 'Short Form', href: '#services' },
+      { label: 'Motion Design', href: '#services' },
+      { label: 'Explainer Videos', href: '#services' },
+      { label: 'Color Grading', href: '#services' }
     ],
     company: [
-      { label: 'À propos', href: '#about' },
+      { label: 'About Us', href: '#about' },
       { label: 'Portfolio', href: '#portfolio' },
-      { label: 'Processus', href: '#processus' },
-      { label: 'Témoignages', href: '#testimonials' }
+      { label: 'Process', href: '#processus' },
+      { label: 'Testimonials', href: '#testimonials' }
     ],
     support: [
       { label: 'FAQ', href: '#faq' },
       { label: 'Contact', href: '#contact' },
-      { label: 'Devis gratuit', href: '#contact' },
-      { label: 'Réserver un appel', href: '#contact' }
+      { label: 'Free Quote', href: '#contact' },
+      { label: 'Book a Call', href: '#contact' }
     ]
   };
 
   const socialLinks = [
-    { icon: Instagram, href: 'https://www.instagram.com/redart.vfx/', label: 'Instagram' },
+    { icon: Instagram, href: 'https://www.instagram.com/redart_motion/', label: 'Instagram' },
     { icon: Mail, href: 'mailto:redartmotion@gmail.com', label: 'Email' }
   ];
 
@@ -39,9 +39,9 @@ export function Footer() {
           {/* Brand Column */}
           <div className="col-span-1 sm:col-span-2">
             <a href="#" className="flex items-center gap-2 mb-4">
-              <img 
-                src={logo} 
-                alt="RedArtMotion Logo" 
+              <img
+                src={logo}
+                alt="RedArtMotion Logo"
                 className="w-10 h-10 object-contain"
               />
               <span className="text-white text-xl">
@@ -49,7 +49,7 @@ export function Footer() {
               </span>
             </a>
             <p className="text-zinc-400 mb-6 max-w-xs text-sm sm:text-base">
-              Studio de montage vidéo & motion design pour créateurs de contenu et entreprises innovantes.
+              Video editing & motion design studio for content creators and innovative companies.
             </p>
             <div className="flex items-center gap-3">
               {socialLinks.map((social, index) => (
@@ -86,7 +86,7 @@ export function Footer() {
 
           {/* Company Column */}
           <div>
-            <h4 className="text-white mb-4">Entreprise</h4>
+            <h4 className="text-white mb-4">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
@@ -123,15 +123,15 @@ export function Footer() {
         <div className="py-8 border-t border-zinc-900">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h4 className="text-white mb-2">Restez informé</h4>
+              <h4 className="text-white mb-2">Stay informed</h4>
               <p className="text-zinc-400 text-sm">
-                Recevez nos conseils vidéo et nos offres exclusives
+                Receive our video tips and exclusive offers
               </p>
             </div>
             <form className="flex gap-3 w-full md:w-auto">
               <input
                 type="email"
-                placeholder="Votre email"
+                placeholder="Your email"
                 className="flex-1 md:w-64 px-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-white transition-colors"
               />
               <button
@@ -139,7 +139,7 @@ export function Footer() {
                 className="px-6 py-2.5 bg-white text-black rounded-lg hover:bg-zinc-100 transition-colors flex items-center gap-2"
               >
                 <Mail className="w-4 h-4" />
-                S'abonner
+                Subscribe
               </button>
             </form>
           </div>
@@ -149,17 +149,17 @@ export function Footer() {
         <div className="py-6 border-t border-zinc-900">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
             <div>
-              © {currentYear} RedArtMotion. Tous droits réservés.
+              © {currentYear} RedArtMotion. All rights reserved.
             </div>
             <div className="flex items-center gap-6">
               <a href="#" className="hover:text-white transition-colors">
-                Mentions légales
+                Legal Notice
               </a>
               <a href="#" className="hover:text-white transition-colors">
-                Politique de confidentialité
+                Privacy Policy
               </a>
               <a href="#" className="hover:text-white transition-colors">
-                CGV
+                T&C
               </a>
             </div>
           </div>
