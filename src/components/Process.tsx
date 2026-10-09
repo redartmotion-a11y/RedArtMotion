@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { MessageSquare, Lightbulb, CheckCircle, Video, Rocket } from 'lucide-react';
+import { MessageSquare, Lightbulb, CheckCircle, Rocket } from 'lucide-react';
 
 export function Process() {
   const steps = [
@@ -26,9 +26,7 @@ export function Process() {
       duration: '1-2 jours'
     },
     {
-      icon: Video ,
-            icon: Rocket,
-
+      icon: Rocket,
       number: '04',
       title: 'Production & Montage &Livraison',
       description: 'Montage vidéo, motion design, color grading, mixage audio - création de votre vidéo finale. Révisions finales, export dans tous les formats nécessaires et livraison de vos fichiers.',
