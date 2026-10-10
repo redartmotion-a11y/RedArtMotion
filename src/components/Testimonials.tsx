@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Quote, Send, User, MessageSquare, Loader, RefreshCw, Heart } from 'lucide-react';
+import { Star, Quote, Send, User, MessageSquare, Loader, RefreshCw, Heart, X } from 'lucide-react';
 
 interface Testimonial {
   name: string;
@@ -39,7 +39,6 @@ export function Testimonials() {
       setApiStatus('loading');
 
       const url = `${GOOGLE_SHEETS_WEB_APP_URL}?t=${Date.now()}`;
-
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -127,7 +126,6 @@ export function Testimonials() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (rating === 0) {
       alert('⭐ Please provide a rating');
       return;
@@ -146,14 +144,12 @@ export function Testimonials() {
     setIsSubmitting(true);
 
     try {
-      // Prepare data
       const submissionData = {
         name: formData.name.trim(),
         rating: rating,
         comment: formData.comment.trim()
       };
 
-      // Send to Google Apps Script
       await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -163,19 +159,14 @@ export function Testimonials() {
         body: JSON.stringify(submissionData)
       });
 
-      // SUCCESS - Reset form
       setFormData({ name: '', comment: '' });
       setRating(0);
-
-      // Show thank you message
       setSubmitSuccess(true);
 
-      // Refresh after 3 seconds
       setTimeout(() => {
         fetchTestimonialsFromGoogleSheets();
       }, 3000);
 
-      // Hide message after 5 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);
@@ -183,8 +174,7 @@ export function Testimonials() {
     } catch (error) {
       console.error('❌ Submission error:', error);
 
-      // Local fallback
-      const localTestimonial = {
+      const localTestimonial: Testimonial = {
         name: formData.name,
         rating: rating,
         text: formData.comment,
@@ -207,7 +197,6 @@ export function Testimonials() {
     }
   };
 
-  // Star handling
   const handleStarClick = (value: number) => {
     setRating(value === rating ? 0 : value);
   };
@@ -221,131 +210,74 @@ export function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-16 sm:py-24 bg-zinc-900 relative overflow-hidden">
+    <section id="testimonials" className="py-12 sm:py-20 md:py-24 bg-zinc-900 relative overflow-hidden">
       <div id="reviews" className="absolute -top-20" />
 
-      {/* THANK YOU POPUP */}
+      {/* THANK YOU POPUP MODAL */}
       <AnimatePresence>
         {submitSuccess && (
-          <>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto bg-black/85 backdrop-blur-md">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gradient-to-br from-purple-900/90 to-black z-50 flex items-center justify-center p-4"
-              onClick={() => setSubmitSuccess(false)}
+              initial={{ scale: 0.9, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="relative bg-gradient-to-br from-zinc-900 via-purple-950/40 to-zinc-900 border border-purple-500/30 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl my-auto text-center"
+              onClick={(e) => e.stopPropagation()}
             >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                className="relative bg-gradient-to-br from-purple-900/90 to-purple-950/90 border border-purple-500/30 rounded-2xl p-8 max-w-md w-full shadow-2xl shadow-purple-900/50 backdrop-blur-sm"
-                onClick={(e) => e.stopPropagation()}
+              <button
+                onClick={() => setSubmitSuccess(false)}
+                className="absolute top-3.5 right-3.5 text-zinc-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+                aria-label="Close"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 rounded-2xl" />
+                <X className="w-5 h-5" />
+              </button>
 
+              <div className="relative inline-block mb-6">
+                <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full" />
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-lg mx-auto">
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                </div>
+              </div>
+
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                Thank you so much!
+              </h3>
+              <p className="text-pink-300 text-sm sm:text-base font-normal mb-5">
+                Your feedback matters a lot to us
+              </p>
+
+              <div className="p-4 sm:p-5 rounded-xl bg-purple-900/30 border border-purple-400/20 mb-6">
+                <p className="text-white text-base sm:text-lg font-medium italic">
+                  "We hope you enjoyed working with us"
+                </p>
+                <div className="flex justify-center gap-1 mt-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                 <button
                   onClick={() => setSubmitSuccess(false)}
-                  className="absolute top-4 right-4 text-zinc-300 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 z-10"
+                  className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all text-sm sm:text-base"
                 >
-                  ✕
+                  Continue
                 </button>
-
-                <div className="relative z-10 text-center">
-                  <motion.div
-                    animate={{
-                      scale: [1, 1.15, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                    className="inline-block mb-8"
-                  >
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full animate-pulse" />
-                      <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-purple-700 to-pink-600 flex items-center justify-center shadow-lg">
-                        <Heart className="w-12 h-12 text-white" />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <h3 className="text-2xl font-bold text-white mb-6">
-                    Thank you so much!
-                    <span className="block text-pink-300 text-lg font-normal mt-2">
-                      Your feedback matters a lot
-                    </span>
-                  </h3>
-
-                  <div className="space-y-6 mb-8">
-                    <div className="relative">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-30" />
-                      <div className="relative bg-gradient-to-b from-purple-900/50 to-purple-950/50 p-6 rounded-xl border border-purple-400/30">
-                        <p className="text-white text-xl font-medium italic leading-relaxed">
-                          "We hope you enjoyed working with us"
-                        </p>
-                        <div className="flex justify-center mt-4">
-                          <div className="flex gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <p className="text-purple-200">
-                      Your testimonial has been recorded and is visible to everyone.
-                    </p>
-                  </div>
-
-                  <div className="mb-8">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-purple-300">Registration</span>
-                      <span className="text-pink-300">✓ Completed</span>
-                    </div>
-                    <div className="w-full h-2 bg-purple-900/50 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: 2.5, ease: "easeInOut" }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setSubmitSuccess(false)}
-                      className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all border border-purple-400/30"
-                    >
-                      Continue
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={fetchTestimonialsFromGoogleSheets}
-                      className="flex-1 py-3 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition-all border border-white/20"
-                    >
-                      View reviews
-                    </motion.button>
-                  </div>
-
-                  <p className="text-purple-400 text-xs mt-6">
-                    RedArtMotion - Exceptional Video Creation
-                  </p>
-                </div>
-              </motion.div>
+                <button
+                  onClick={fetchTestimonialsFromGoogleSheets}
+                  className="w-full py-2.5 sm:py-3 bg-zinc-800 text-white font-medium rounded-xl hover:bg-zinc-700 transition-all border border-zinc-700 text-sm sm:text-base"
+                >
+                  View Reviews
+                </button>
+              </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_var(--tw-gradient-stops))] from-purple-900/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Header */}
@@ -353,100 +285,103 @@ export function Testimonials() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-8"
+          className="text-center mb-10 sm:mb-14"
         >
-          <div className="flex items-center justify-between mb-8">
-            <div className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white">
-              Testimonials
+          <div className="flex flex-row items-center justify-between gap-3 mb-6 sm:mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 bg-white/10 border border-white/20 rounded-full text-white text-xs sm:text-sm font-medium">
+              <span>Testimonials</span>
             </div>
             <button
               onClick={fetchTestimonialsFromGoogleSheets}
               disabled={isRefreshing}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors disabled:opacity-50"
               title="Refresh testimonials"
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
             </button>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            What our clients say
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
+            What Our Clients Say
           </h2>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-            Over 150 clients trust us for their video projects
+          <p className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-2">
+            Over 150+ creators, founders, and brands trust us for their video projects
           </p>
-
-          <div className="mt-4 text-sm">
-            <div className="text-xs text-zinc-400">
-              Last refresh: {new Date().toLocaleTimeString('en-US')}
-            </div>
-          </div>
         </motion.div>
 
-        {/* Testimonials Grid - SIMPLE WITHOUT AVATAR */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {/* Responsive Testimonials Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={`${testimonial.name}-${index}-${testimonial.source}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-white/50 transition-all duration-300"
+              transition={{ delay: Math.min(index * 0.08, 0.4) }}
+              className="group relative p-5 sm:p-6 bg-zinc-900/90 border border-zinc-800 rounded-2xl hover:border-zinc-700 transition-all duration-300 flex flex-col justify-between"
             >
-              {/* Icône citation */}
-              <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Quote className="w-12 h-12 text-white" />
+              {/* Quote background icon */}
+              <div className="absolute top-4 right-4 sm:top-5 sm:right-5 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Quote className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
 
-              {/* Name and role ONLY - NO AVATAR */}
-              <div className="mb-4">
-                <div className="text-white font-medium text-lg mb-1">{testimonial.name}</div>
-                <div className="text-zinc-500 text-sm">{testimonial.role}</div>
-              </div>
+              <div>
+                {/* Author Info */}
+                <div className="mb-3 pr-8">
+                  <div className="text-white font-semibold text-base sm:text-lg">{testimonial.name}</div>
+                  <div className="text-zinc-400 text-xs sm:text-sm">{testimonial.role}</div>
+                </div>
 
-              {/* Rating - Stars only */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-4 h-4 ${i < testimonial.rating
-                      ? 'text-yellow-500 fill-yellow-500'
-                      : 'text-zinc-700'
+                {/* Rating Stars */}
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
+                        i < testimonial.rating
+                          ? 'text-yellow-400 fill-yellow-400'
+                          : 'text-zinc-700'
                       }`}
-                  />
-                ))}
+                    />
+                  ))}
+                </div>
+
+                {/* Testimonial text */}
+                <p className="text-zinc-300 text-sm sm:text-base leading-relaxed italic">
+                  "{testimonial.text}"
+                </p>
               </div>
 
-              {/* Testimonial text */}
-              <p className="text-zinc-300 italic">
-                "{testimonial.text}"
-              </p>
+              {testimonial.timestamp && (
+                <div className="mt-4 pt-3 border-t border-zinc-800/60 text-xs text-zinc-500">
+                  {new Date(testimonial.timestamp).toLocaleDateString()}
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
 
-        {/* Form */}
+        {/* Feedback Form Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto px-1 sm:px-0"
         >
-          <div className="bg-gradient-to-br from-zinc-900 to-black rounded-2xl p-8 border border-zinc-800 shadow-2xl">
-            <div className="text-center mb-8">
-              <h3 className="text-white text-2xl font-bold mb-2">Share your experience</h3>
-              <p className="text-zinc-400">Your feedback helps us improve our services</p>
+          <div className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-black rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 border border-zinc-800 shadow-2xl">
+            <div className="text-center mb-6 sm:mb-8">
+              <h3 className="text-white text-xl sm:text-2xl font-bold mb-2">Share Your Experience</h3>
+              <p className="text-zinc-400 text-xs sm:text-sm">Your feedback helps us continuously elevate our services</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Rating with stars */}
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+              {/* Star Rating Selector */}
               <div className="text-center">
-                <div className="text-white mb-4 text-lg font-medium">Rate our work</div>
+                <div className="text-white mb-3 text-sm sm:text-base font-medium">Rate our collaboration</div>
 
-                <div className="bg-zinc-800/50 p-6 rounded-2xl border border-zinc-700/50">
-                  <div className="flex justify-center gap-2 mb-4">
+                <div className="bg-zinc-800/40 p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-zinc-700/40">
+                  <div className="flex justify-center gap-2 sm:gap-3 mb-3 touch-manipulation">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
@@ -454,38 +389,40 @@ export function Testimonials() {
                         onClick={() => handleStarClick(star)}
                         onMouseEnter={() => handleStarHover(star)}
                         onMouseLeave={handleStarLeave}
-                        className="transform hover:scale-110 transition-all duration-300 active:scale-95"
+                        className="transform hover:scale-110 active:scale-95 transition-all p-1"
                         disabled={isSubmitting}
+                        aria-label={`${star} star`}
                       >
                         <Star
-                          className={`w-10 h-10 ${(hoverRating || rating) >= star
-                            ? 'text-yellow-400 fill-yellow-400 drop-shadow-lg'
-                            : 'text-zinc-500 fill-zinc-800/30'
-                            } transition-all duration-300`}
+                          className={`w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 ${
+                            (hoverRating || rating) >= star
+                              ? 'text-yellow-400 fill-yellow-400 drop-shadow-md'
+                              : 'text-zinc-600 fill-zinc-800/50'
+                          } transition-colors`}
                         />
                       </button>
                     ))}
                   </div>
 
-                  <div className="text-xl font-bold text-white">
-                    {rating > 0 ? `${rating} star${rating > 1 ? 's' : ''}` : 'Click on the stars'}
+                  <div className="text-base sm:text-lg font-bold text-white">
+                    {rating > 0 ? `${rating} star${rating > 1 ? 's' : ''}` : 'Tap on the stars'}
                   </div>
 
-                  <div className="text-sm text-zinc-400 mt-2">
-                    {rating === 5 && 'Excellent!'}
-                    {rating === 4 && 'Very good'}
+                  <div className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    {rating === 5 && 'Outstanding!'}
+                    {rating === 4 && 'Very Good'}
                     {rating === 3 && 'Good'}
                     {rating === 2 && 'Average'}
-                    {rating === 1 && 'Fair'}
+                    {rating === 1 && 'Needs Improvement'}
                   </div>
                 </div>
               </div>
 
-              {/* Name */}
+              {/* Name Input */}
               <div>
-                <label className="block text-zinc-400 text-sm mb-2 flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Your name *
+                <label className="text-zinc-300 text-xs sm:text-sm mb-2 flex items-center gap-1.5 font-medium">
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400" />
+                  Your Name *
                 </label>
                 <input
                   type="text"
@@ -494,17 +431,17 @@ export function Testimonials() {
                   onChange={handleInputChange}
                   required
                   maxLength={50}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 transition-all disabled:opacity-50"
-                  placeholder="Your first or last name"
+                  className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-zinc-800/80 border border-zinc-700 rounded-xl text-white text-sm sm:text-base focus:outline-none focus:border-white transition-all disabled:opacity-50"
+                  placeholder="e.g. John Doe"
                   disabled={isSubmitting}
                 />
               </div>
 
-              {/* Comment */}
+              {/* Comment Input */}
               <div>
-                <label className="block text-zinc-400 text-sm mb-2 flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4" />
-                  Your comment *
+                <label className="text-zinc-300 text-xs sm:text-sm mb-2 flex items-center gap-1.5 font-medium">
+                  <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400" />
+                  Your Review *
                 </label>
                 <textarea
                   name="comment"
@@ -514,11 +451,11 @@ export function Testimonials() {
                   minLength={10}
                   maxLength={500}
                   rows={4}
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 transition-all resize-none disabled:opacity-50"
-                  placeholder="Describe your experience with our services..."
+                  className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-zinc-800/80 border border-zinc-700 rounded-xl text-white text-sm sm:text-base focus:outline-none focus:border-white transition-all resize-none disabled:opacity-50"
+                  placeholder="Share details about the video quality, communication, and turnaround..."
                   disabled={isSubmitting}
                 />
-                <div className="text-xs text-zinc-500 mt-1 text-right">
+                <div className="text-[11px] sm:text-xs text-zinc-500 mt-1 text-right">
                   {formData.comment.length}/500 characters
                 </div>
               </div>
@@ -527,59 +464,51 @@ export function Testimonials() {
               <button
                 type="submit"
                 disabled={isSubmitting || rating === 0}
-                className={`w-full py-3.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${isSubmitting || rating === 0
-                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 hover:shadow-lg active:scale-95'
-                  }`}
+                className={`w-full py-3 sm:py-3.5 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-sm sm:text-base shadow-lg ${
+                  isSubmitting || rating === 0
+                    ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-zinc-700'
+                    : 'bg-white text-black hover:bg-zinc-200 active:scale-[0.98]'
+                }`}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader className="w-5 h-5 animate-spin" />
-                    Sending...
+                    <Loader className="w-4 h-4 animate-spin" />
+                    <span>Submitting...</span>
                   </>
                 ) : (
                   <>
-                    <Send className="w-5 h-5" />
-                    Submit my review
+                    <Send className="w-4 h-4" />
+                    <span>Submit Review</span>
                   </>
                 )}
               </button>
 
-              <div className="text-center">
-                <p className="text-xs text-zinc-500">
-                  Your testimonial will be visible immediately.
-                </p>
-                <p className="text-xs text-zinc-600 mt-1">
-                  By submitting, you agree to the public display of your testimonial.
-                </p>
-              </div>
+              <p className="text-[11px] sm:text-xs text-zinc-500 text-center">
+                Your testimonial will be published publicly on this page.
+              </p>
             </form>
           </div>
         </motion.div>
 
-        {/* Trust indicators */}
+        {/* Responsive Trust Indicators / Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+          className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-2"
         >
           {[
-            { value: '4.9/5', label: 'Average rating', icon: '⭐' },
-            { value: `${testimonials.length}+`, label: 'Client reviews', icon: '💬' },
-            {
-              value: '150+',
-              label: 'Satisfied clients',
-              icon: '😊'
-            },
-            { value: '100%', label: 'Satisfaction', icon: '😊' }
+            { value: '4.9/5', label: 'Average Rating', icon: '⭐' },
+            { value: `${testimonials.length}+`, label: 'Client Reviews', icon: '💬' },
+            { value: '150+', label: 'Satisfied Clients', icon: '🤝' },
+            { value: '99%', label: 'Satisfaction Rate', icon: '✨' }
           ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl text-white mb-1 flex items-center justify-center gap-2">
-                <span className="text-2xl">{stat.icon}</span>
+            <div key={index} className="p-3 sm:p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-center">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 flex items-center justify-center gap-1.5">
+                <span className="text-lg sm:text-xl">{stat.icon}</span>
                 <span>{stat.value}</span>
               </div>
-              <div className="text-zinc-500 text-sm">{stat.label}</div>
+              <div className="text-zinc-500 text-xs sm:text-sm font-medium">{stat.label}</div>
             </div>
           ))}
         </motion.div>
