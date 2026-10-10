@@ -63,10 +63,10 @@ export function FAQ() {
           <div className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white mb-4">
             FAQ
           </div>
-          <h2 className="text-white mb-4">
+          <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-zinc-400 text-xl max-w-2xl mx-auto">
+          <p className="text-zinc-400 text-base sm:text-xl max-w-2xl mx-auto">
             Have questions? We have answers
           </p>
         </motion.div>

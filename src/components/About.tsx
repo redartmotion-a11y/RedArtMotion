@@ -49,15 +49,15 @@ export function About() {
           <div className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white mb-4">
             About Us
           </div>
-          <h2 className="text-white mb-4">
+          <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Your Creative Partner
           </h2>
-          <p className="text-zinc-400 text-xl max-w-2xl mx-auto">
+          <p className="text-zinc-400 text-base sm:text-xl max-w-2xl mx-auto">
             RedArtMotion is a studio specialized in creating videos that convert
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 sm:mb-20">
           {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -69,14 +69,14 @@ export function About() {
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1757845524683-611470b2d7ce?w=800&q=80"
                 alt="RedArtMotion Studio"
-                className="w-full h-[500px] object-cover"
+                className="w-full h-72 sm:h-[450px] lg:h-[500px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
             </div>
             {/* Floating Stats Card */}
-            <div className="absolute -bottom-6 -right-6 bg-zinc-950 border border-zinc-800 rounded-xl p-6 shadow-xl">
-              <div className="text-3xl text-white mb-1">98%</div>
-              <div className="text-zinc-400 text-sm">Satisfaction Rate</div>
+            <div className="absolute bottom-3 right-3 sm:-bottom-6 sm:-right-6 bg-zinc-950/95 backdrop-blur-md border border-zinc-800 rounded-xl p-4 sm:p-6 shadow-xl">
+              <div className="text-2xl sm:text-3xl font-bold text-white mb-0.5 sm:mb-1">98%</div>
+              <div className="text-zinc-400 text-xs sm:text-sm">Satisfaction Rate</div>
             </div>
           </motion.div>
 
@@ -86,7 +86,7 @@ export function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-white mb-6">
+            <h3 className="text-white text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">
               We transform your ideas into videos that captivate and convert
             </h3>
             <div className="space-y-4 text-zinc-400 mb-8">

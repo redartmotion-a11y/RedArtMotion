@@ -162,7 +162,7 @@ export function Hero() {
       </div>
 
       {/* Main Center Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32 text-center pointer-events-none">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-14 sm:py-32 text-center pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -176,28 +176,34 @@ export function Hero() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-white mb-4 sm:mb-6 max-w-4xl mx-auto text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold tracking-tight">
+          <h1 className="text-white mb-4 sm:mb-6 max-w-4xl mx-auto text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.2]">
             Transform your ideas into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+            <span
+              className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-zinc-300"
+              style={{
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               impactful videos
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto mb-8 sm:mb-12 px-4 leading-relaxed font-normal">
+          <p className="text-zinc-400 text-sm sm:text-lg lg:text-xl max-w-2xl mx-auto mb-8 sm:mb-12 px-2 leading-relaxed font-normal">
             Professional video editing, motion design & explainer videos for SaaS,
             Coaches, YouTubers, and Content Creators who want to captivate their audience
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-center px-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center px-2 max-w-xs sm:max-w-none mx-auto w-full">
             <a
               href="#contact"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="group px-8 sm:px-10 py-3 sm:py-4 bg-white text-black rounded-full hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] text-sm sm:text-base font-bold"
+              className="group px-8 sm:px-10 py-3.5 sm:py-4 bg-white text-black rounded-full hover:bg-zinc-100 transition-all duration-300 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] text-sm sm:text-base font-bold"
             >
               Hire Me
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -209,7 +215,7 @@ export function Hero() {
                 e.preventDefault();
                 document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="group px-8 sm:px-10 py-3 sm:py-4 bg-zinc-900 border border-zinc-700 text-white rounded-full hover:bg-zinc-800 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
+              className="group px-8 sm:px-10 py-3.5 sm:py-4 bg-zinc-900 border border-zinc-700 text-white rounded-full hover:bg-zinc-800 transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
             >
               <Play className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
               View My Work
@@ -217,7 +223,7 @@ export function Hero() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mt-16 sm:mt-24 max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 mt-12 sm:mt-24 max-w-4xl mx-auto px-2">
             {[
               { value: '150+', label: 'VIDEOS PRODUCED' },
               { value: '150+', label: 'SATISFIED CLIENTS' },
@@ -231,10 +237,10 @@ export function Hero() {
                 transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
                 className="text-center group"
               >
-                <div className="text-3xl sm:text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-2xl sm:text-4xl font-bold text-white mb-1 group-hover:scale-110 transition-transform">
                   {stat.value}
                 </div>
-                <div className="text-xs sm:text-sm font-medium text-zinc-500 uppercase tracking-wider">
+                <div className="text-[11px] sm:text-xs font-medium text-zinc-400 uppercase tracking-wider">
                   {stat.label}
                 </div>
               </motion.div>

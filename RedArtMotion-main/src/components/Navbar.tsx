@@ -15,9 +15,9 @@ export function Navbar() {
   }, []);
 
   const navLinks = [
+    { href: '#portfolio', label: 'Portfolio' },
     { href: '#services', label: 'Services' },
     { href: '#process', label: 'Process' },
-    { href: '#portfolio', label: 'Portfolio' },
     { href: '#testimonials', label: 'Reviews' },
     { href: '#faq', label: 'FAQ' },
   ];

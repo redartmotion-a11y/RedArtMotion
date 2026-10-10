@@ -383,13 +383,13 @@ export function Portfolio() {
 
         {/* Action Buttons for Current Slide */}
         {projects[selectedIndex] && (
-          <div className="flex justify-center gap-4 mt-8 px-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 px-4 max-w-sm sm:max-w-none mx-auto w-full">
             <button
               onClick={() => {
                 setSelectedVideo(projects[selectedIndex]);
                 setVideoModalOpen(true);
               }}
-              className="flex items-center gap-2 px-8 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 active:scale-95 transition-all shadow-lg text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 active:scale-95 transition-all shadow-lg text-sm sm:text-base"
             >
               <Play className="w-4 h-4 fill-black" />
               Watch Video
@@ -398,7 +398,7 @@ export function Portfolio() {
               href={projects[selectedIndex].videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-8 py-3 bg-zinc-900 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-800 active:scale-95 transition-all text-sm sm:text-base"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-zinc-900 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-800 active:scale-95 transition-all text-sm sm:text-base"
             >
               {getPlatformIcon(projects[selectedIndex].type)}
               Open on YouTube
