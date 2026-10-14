@@ -320,28 +320,6 @@ export function Portfolio() {
         <p className="text-zinc-400 text-sm sm:text-lg max-w-2xl mx-auto">
           Swipe or click through our high-retention video edits, kinetic typography, and motion design masterpieces.
         </p>
-
-        {/* Category Filter Tabs */}
-        {categories.length > 2 && (
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mt-6 sm:mt-8 max-w-2xl mx-auto">
-            {categories.map((cat) => {
-              const isSelected = activeCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-white text-black shadow-lg shadow-white/10 scale-105'
-                      : 'bg-zinc-900/80 text-zinc-400 border border-zinc-800 hover:text-white hover:border-zinc-700'
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
-        )}
       </motion.div>
 
       {/* Swipeable Carousel */}
@@ -402,34 +380,16 @@ export function Portfolio() {
 
                     {/* Non-active dimming veil */}
                     <div
-                      className="absolute inset-0 bg-black transition-opacity duration-300"
-                      style={{ opacity: isActive ? 0.2 : 0.65 }}
+                      className="absolute inset-0 bg-black transition-opacity duration-300 pointer-events-none"
+                      style={{ opacity: isActive ? 0 : 0.6 }}
                     />
 
-                    {/* Gradient Overlay for Text Readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
-
-                    {/* Top Badges (Category & Duration) */}
-                    <div className="absolute top-2.5 sm:top-3.5 left-2.5 sm:left-3.5 right-2.5 sm:right-3.5 flex items-center justify-between z-10 pointer-events-none">
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs text-white font-medium shadow-lg">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        <span>{project.category}</span>
-                      </div>
-
-                      {project.duration && (
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[11px] sm:text-xs text-zinc-300 font-mono shadow-lg">
-                          <Clock className="w-3 h-3 text-zinc-400" />
-                          <span>{project.duration}</span>
-                        </div>
-                      )}
-                    </div>
-
                     {/* Center Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
                       <div
                         className={`relative rounded-full flex items-center justify-center transition-all duration-300 ${
                           isActive
-                            ? 'w-11 h-11 sm:w-16 sm:h-16 bg-white/95 text-black shadow-[0_0_25px_rgba(255,255,255,0.4)] group-hover:scale-110 group-hover:bg-white'
+                            ? 'w-12 h-12 sm:w-16 sm:h-16 bg-white/95 text-black shadow-[0_0_25px_rgba(255,255,255,0.4)] group-hover:scale-110 group-hover:bg-white'
                             : 'w-8 h-8 sm:w-10 sm:h-10 bg-black/60 text-white/80 border border-white/20 group-hover:scale-105'
                         }`}
                       >
@@ -444,41 +404,6 @@ export function Portfolio() {
                             style={{ animationDuration: '2.5s' }}
                           />
                         )}
-                      </div>
-                    </div>
-
-                    {/* Bottom Card Information */}
-                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5 z-10">
-                      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-1.5 sm:gap-3">
-                        <div className="max-w-md">
-                          <span className="text-red-400 text-[11px] sm:text-xs font-semibold tracking-wider uppercase block mb-0.5">
-                            {project.client} · {project.category}
-                          </span>
-                          <h3 className="text-white text-sm sm:text-lg lg:text-xl font-bold tracking-tight leading-snug drop-shadow-md portfolio-line-clamp-1 sm:portfolio-line-clamp-2">
-                            {project.title}
-                          </h3>
-                          {project.description && (
-                            <p className="text-zinc-300 text-[11px] sm:text-xs mt-0.5 portfolio-line-clamp-1 opacity-90 hidden sm:block">
-                              {project.description}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Stats Badges */}
-                        <div className="flex items-center gap-2 text-zinc-300 text-xs sm:text-sm shrink-0">
-                          {Number(project.views || 0) > 0 && (
-                            <span className="px-2.5 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/15 flex items-center gap-1.5 font-medium">
-                              <Eye className="w-3.5 h-3.5 text-red-400" />
-                              {Number(project.views).toLocaleString()} views
-                            </span>
-                          )}
-                          {Number(project.engagement || 0) > 0 && (
-                            <span className="px-2.5 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/15 flex items-center gap-1.5 font-medium hidden xs:flex">
-                              <Flame className="w-3.5 h-3.5 text-amber-400" />
-                              {project.engagement}%
-                            </span>
-                          )}
-                        </div>
                       </div>
                     </div>
                   </motion.div>
